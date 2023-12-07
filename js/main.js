@@ -61,7 +61,8 @@ document.addEventListener('DOMContentLoaded', () =>{
       tetrisSquares[currentPosition + index].classList.add('tetrisBlock');
     })
   }
-  draw();
+
+  const 
 
   //move tetris block
   document.addEventListener('keydown', e =>{
@@ -71,5 +72,12 @@ document.addEventListener('DOMContentLoaded', () =>{
       moveRight();
     }
   });
+
+  //randomly select tetris block
+  let random = Math.floor(Math.random() * tetrisBlocks.length);
+  console.log(random)
+  let currentRotation = 0;
+  current = tetrisBlocks[random][currentRotation];
+
 
 });
