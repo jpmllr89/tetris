@@ -5,12 +5,25 @@ document.addEventListener('DOMContentLoaded', () =>{
   const scoreDisplay = document.querySelector('#score')
   const startBtn = document.querySelector('#start-button');
   
+  // Making Grid
   for(let i = 0; i < tetrisRow; i++){
     const tetrisBlock = document.createElement('div')
     grid.appendChild(tetrisBlock);
   }
+
+  // Here we will make the taken blocks
+  for(let i = 0; i < 10; i++){
+    const tetrisBlock = document.createElement('div')
+    tetrisBlock.classList.add('taken')
+    grid.appendChild(tetrisBlock);
+  }
+
   let tetrisSquares = Array.from(document.querySelectorAll('.grid div'));
   console.log(tetrisSquares)
+
+  // const newPosition = () =>{
+  //   return Math.floor(Math.random() * (tetrisWidth - blockWidth));
+  // }
 
   // Here we will make the tetris blocks
   const lTetrisBlock = [
@@ -51,18 +64,19 @@ document.addEventListener('DOMContentLoaded', () =>{
   const tetrisBlocks = [lTetrisBlock, zTetrisBlock, tTetrisBlock, oTetrisBlock, iTetrisBlock]
 
   let currentPosition = 4;
-  let current = tetrisBlocks[0][0];
+  let currentRotation = 0;
+  let random = Math.floor(Math.random() * tetrisBlocks.length);
+  current = tetrisBlocks[random][currentRotation];
 
-  console.log(tetrisBlocks, currentPosition, current)
 
   //drawing tetris blocks
-  const draw = () =>{
+  function draw(){
     current.forEach(index =>{
       tetrisSquares[currentPosition + index].classList.add('tetrisBlock');
     })
   }
 
-  const unDraw = () =>{
+  function unDraw(){
     current.forEach(index =>{
       tetrisSquares[currentPosition + index].classList.remove('tetrisBlock');
     })
@@ -77,11 +91,26 @@ document.addEventListener('DOMContentLoaded', () =>{
     }
   });
 
-  //randomly select tetris block
-  let random = Math.floor(Math.random() * tetrisBlocks.length);
-  console.log(random)
-  let currentRotation = 0;
-  current = tetrisBlocks[random][currentRotation];
+  //move tetris block down grid
+  timerId = setInterval(moveDown, 100);
 
+  function moveDown(){
+    unDraw();
+    currentPosition += tetrisWidth;
+    draw();
+    freeze();
+  }
+  moveDown();
 
+  // add freeze function to keep the block there
+  function freeze(){
+    if(current.some(index => tetrisSquares[currentPosition + index + tetrisWidth].classList.contains('taken'))){
+      current.forEach(index => tetrisSquares[currentPosition + index].classList.add('taken'));
+    }
+    //start a new tetris block falling
+    random = Math.floor(Math.random() * tetrisBlocks.length);
+    current = tetrisBlocks[random][currentRotation];
+    currentPosition = 4;
+    draw();
+  }
 });
