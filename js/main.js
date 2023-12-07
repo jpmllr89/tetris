@@ -62,7 +62,11 @@ document.addEventListener('DOMContentLoaded', () =>{
     })
   }
 
-  const 
+  const unDraw = () =>{
+    current.forEach(index =>{
+      tetrisSquares[currentPosition + index].classList.remove('tetrisBlock');
+    })
+  }
 
   //move tetris block
   document.addEventListener('keydown', e =>{
