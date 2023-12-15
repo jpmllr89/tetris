@@ -4,8 +4,10 @@ document.addEventListener('DOMContentLoaded', () =>{
   const grid = document.querySelector('.grid');
   const nextBlockGrid = document.querySelector('.nextBlockGrid');
   const scoreDisplay = document.querySelector('#score')
-  const startBtn = document.querySelector('#start-button');
+  const startBtn = document.querySelector('#start');
   let nextRandom = 0;
+  let score = 0;
+  let timerId;
   // Making Grid
   for(let i = 0; i < tetrisRow; i++){
     const tetrisBlock = document.createElement('div')
@@ -89,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () =>{
     })
   }
 
-  // move tetris blockasddw
+  // move tetris blocks
   function controlpad(e){
     if(e.keyCode === 37){
       moveLeft();
@@ -104,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () =>{
   document.addEventListener('keydown', controlpad);
 
   //move tetris block down grid
-  timerId = setInterval(moveDown, 1000);
+  // timerId = setInterval(moveDown, 1000);
 
   function moveDown(){
     unDraw();
@@ -133,6 +135,8 @@ document.addEventListener('DOMContentLoaded', () =>{
     currentPosition = Math.floor(Math.random() * (tetrisWidth - blockWidth));
     draw();
     displayShape();
+    removeRow();
+    gameOver()
     }
   }
 
@@ -198,16 +202,16 @@ document.addEventListener('DOMContentLoaded', () =>{
   // show up-next block in mini-grid display
   const displayTetrisSquares = document.querySelectorAll('.nextBlockGrid div');
   const displayWidth = 4;
-  let displayIndex = 0;
+  let displayIndex = 4;
 
 
   // tetris blocks without rotations
   const upNextTetrisBlocks = [
-    [1, tetrisWidth + 1, tetrisWidth * 2 + 1, 2], // lblock
-    [0, tetrisWidth, tetrisWidth + 1, tetrisWidth * 2 + 1], // zblock
-    [1, tetrisWidth, tetrisWidth + 1, tetrisWidth + 2], // tblock
-    [0, 1, tetrisWidth, tetrisWidth + 1], // oblock
-    [1, tetrisWidth + 1, tetrisWidth * 2 + 1, tetrisWidth * 3 + 1] // iblock
+    [1, displayWidth + 1, displayWidth * 2 + 1, 2], // lblock
+    [displayWidth +1, displayWidth*2 +1, displayWidth*2 + 2, displayWidth * 3 + 2], // zblock
+    [displayWidth*2 + 1, displayWidth + 1, displayWidth*3 + 1, displayWidth*2 + 2], // tblock
+    [displayWidth + 1, displayWidth+2, displayWidth*2+1, displayWidth*2 + 2], // oblock
+    [1, displayWidth + 1, displayWidth * 2 + 1, displayWidth * 3 + 1] // iblock
 
   ]
 
@@ -218,9 +222,52 @@ document.addEventListener('DOMContentLoaded', () =>{
       block.classList.remove('tetrisBlock');
     })
     upNextTetrisBlocks[nextRandom].forEach(index =>{
-      displayTetrisSquares[displayIndex + index].classList.add('tetrisBlock');
+      
+      displayTetrisSquares[index].classList.add('tetrisBlock');
     })
   }
+
+  // start button 
+  startBtn.addEventListener('click', () =>{
+    if (timerId){
+      clearInterval(timerId);
+      timerId = null;
+    } else{
+      draw();
+      timerId = setInterval(moveDown, 1000);
+      nextRandom = Math.floor(Math.random() * tetrisBlocks.length);
+      displayShape();
+    }
+  })
+
+  //remove rows once they are filled
+  function removeRow(){
+    for(let i = 0; i < 199; i += tetrisWidth){
+      const row = [i, i+1, i+2, i+3, i+4, i+5, i+6, i+7, i+8, i+9];
+
+      if(row.every(index => tetrisSquares[index].classList.contains('taken'))){
+        score += parseInt(10);
+        scoreDisplay.innerHTML = `${score}`;
+        row.forEach(index =>{
+          tetrisSquares[index].classList.remove('taken');
+          tetrisSquares[index].classList.remove('tetrisBlock');
+        })
+        const squaresRemoved = tetrisSquares.splice(i, tetrisWidth);
+        tetrisSquares = squaresRemoved.concat(tetrisSquares);
+        tetrisSquares.forEach(cell => grid.appendChild(cell));
+      }
+    }
+
+  }
+
+  //game over function
+  function gameOver(){
+    if(current.some(index => tetrisSquares[currentPosition + index].classList.contains('taken'))){
+      scoreDisplay.innerHTML = 'end';
+      clearInterval(timerId);
+    }
+  }
+  
 
 
 });
