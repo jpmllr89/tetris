@@ -34,6 +34,33 @@
   background-color: red;
 }
 
+.color1{
+  background-color: #FF0D72;
+}
+
+.color2{
+  background-color: #0DC2FF;
+}
+
+.color3{
+  background-color: #0DFF72;
+}
+.color4{
+  background-color: #F538FF;
+}
+.color5{
+  background-color: #FF8E0D;
+}
+.color6{
+  background-color: #FFE138;
+}
+.color7{
+  background-color: #3877FF;
+}
+.color8{
+  background-color: #FF4B38;
+}
+
 .nextBlockGrid div{
   width: 25px;
   height: 25px;
