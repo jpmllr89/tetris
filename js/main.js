@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let score = 0;
   let timerId;
   let isgameOver = false;
+
   // Making Grid
   for (let i = 0; i < tetrisRow; i++) {
     const tetrisBlock = document.createElement("div");
@@ -102,12 +103,14 @@ document.addEventListener("DOMContentLoaded", () => {
     current.forEach((index) => {
       tetrisSquares[currentPosition + index].style.backgroundColor =
         currentColor;
+      tetrisSquares[currentPosition + index].style.border = "1px solid black";
     });
   }
 
   function unDraw() {
     current.forEach((index) => {
       tetrisSquares[currentPosition + index].style.backgroundColor = "";
+      tetrisSquares[currentPosition + index].style.border = "";
     });
   }
 
@@ -351,14 +354,15 @@ document.addEventListener("DOMContentLoaded", () => {
       let intervalId = setInterval(() => {
         if (i < tetrisSquares.length) {
           tetrisSquares[i].style.backgroundColor = "";
-          tetrisSquares[i].classList.add("tetrisBlock");
+          tetrisSquares[i].style.border = "";
+          tetrisSquares[i].style.backgroundColor = `${tetrisColors[i % 8]}`;
           i++;
         } else {
           clearInterval(intervalId);
           let j = tetrisSquares.length - 1;
           let intervalId2 = setInterval(() => {
             if (j >= 0) {
-              tetrisSquares[j].classList.remove("tetrisBlock");
+              tetrisSquares[j].style.backgroundColor = ``;
               tetrisSquares[j].classList.remove("taken");
               j--;
             } else {
