@@ -5,10 +5,17 @@ document.addEventListener("DOMContentLoaded", () => {
   const nextBlockGrid = document.querySelector(".nextBlockGrid");
   const scoreDisplay = document.querySelector("#score");
   const startBtn = document.querySelector("#start");
+  const playerNameInput = document.querySelector("#playerName");
+  const gameStatusContainer = document.querySelector("#gameStatusContainer");
+  const highScore = document.querySelector("#highScore");
+  let playerName = "";
+  let highScores = [];
   let nextRandom = 0;
   let score = 0;
   let timerId;
   let isgameOver = false;
+  let gameStatus = "pre game";
+  let gamesPlayed = 0;
 
   // Making Grid
   for (let i = 0; i < tetrisRow; i++) {
@@ -284,6 +291,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // display the shape in the mini-grid display
   function displayShape() {
     // remove any trace of a tetris block from the entire grid
+    console.log("color Selected");
     currentColor = tetrisColors[Math.floor(Math.random() * 8)];
     displayTetrisSquares.forEach((block) => {
       block.style.backgroundColor = "";
@@ -292,19 +300,43 @@ document.addEventListener("DOMContentLoaded", () => {
       displayTetrisSquares[index].style.backgroundColor = currentColor;
     });
   }
+  function startGame() {
+    if (isgameOver) {
+      return;
+    }
+    draw();
+    displayShape();
+    timerId = setInterval(moveDown, 1000);
+    gameStatus = "playing";
+  }
 
+  function pauseGame() {
+    clearInterval(timerId);
+    gameStatus = "paused";
+  }
   // start button
   startBtn.addEventListener("click", () => {
-    if (timerId) {
-      clearInterval(timerId);
-      timerId = null;
-      isgameOver = false;
-      // Reset game state
-    } else {
-      draw();
-      timerId = setInterval(moveDown, 1000);
-      nextRandom = Math.floor(Math.random() * tetrisBlocks.length);
-      displayShape();
+    playerName = playerNameInput.value.trim();
+
+    if (playerName === "" && gameStatus === "pre game") {
+      alert("Please enter your name");
+      console.log("status", gameStatus);
+      return;
+    }
+    playerNameInput.value = "";
+
+    gameStatusContainer.style.display = "none";
+
+    switch (gameStatus) {
+      case "pre game":
+        startGame();
+        break;
+      case "playing":
+        pauseGame();
+        break;
+      case "paused":
+        startGame();
+        break;
     }
   });
 
@@ -352,7 +384,7 @@ document.addEventListener("DOMContentLoaded", () => {
       clearInterval(timerId);
       let i = 0;
       let intervalId = setInterval(() => {
-        if (i < tetrisSquares.length) {
+        if (i < tetrisSquares.length - 10) {
           tetrisSquares[i].style.backgroundColor = "";
           tetrisSquares[i].style.border = "";
           tetrisSquares[i].style.backgroundColor = `${tetrisColors[i % 8]}`;
@@ -370,19 +402,33 @@ document.addEventListener("DOMContentLoaded", () => {
               tetrisSquares.slice(-10).forEach((square) => {
                 square.classList.add("taken");
               });
-
-              score = 0;
-              scoreDisplay.innerHTML = `${score}`;
               currentPosition = 4;
               currentRotation = 0;
               random = Math.floor(Math.random() * tetrisBlocks.length);
               current = tetrisBlocks[random][currentRotation];
               isgameOver = false; // Reset game state
-              timerId = setInterval(moveDown, 1000);
+              // timerId = setInterval(moveDown, 1000);
+              const playerScore = { name: playerName, score: score };
+              highScores.push(playerScore);
+              highScores.sort((a, b) => b.score - a.score);
+              displayHighScore();
+              score = 0;
+              scoreDisplay.innerHTML = `${score}`;
+              gameStatus = "pre game";
+              timerId = null;
             }
           }, 1);
         }
       }, 1);
     }
+  }
+
+  function displayHighScore() {
+    highScore.innerHTML = "";
+    highScores.forEach((score, index) => {
+      const scoreElement = document.createElement("li");
+      scoreElement.innerHTML = `${index + 1}. ${score.name} - ${score.score}`;
+      highScore.appendChild(scoreElement);
+    });
   }
 });
