@@ -10,6 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <link rel='stylesheet' type='text/css' href='css/style.css'>
+    <link rel="stylesheet" href="css/responsive.css">
 </head>
 <body>
     <div class="main">
@@ -29,9 +30,19 @@
             </div>
     
             <div class="game">
-                <div class="grids-panel">
-                    <div class="grid"></div>
-                    <div class="nextBlockGrid"></div>
+                <div class="game-wrapper">
+                    <div class="grids-panel">
+                        <div class="grid"></div>
+                        <div class="nextBlockGrid phone-viz"></div>
+                    </div>
+                    <div class="controls">
+                        <div class="control-wrapper">
+                            <button class="btn btn-2" id="left">Left</button>
+                            <button class="btn btn-2" id="down">Down</button>
+                            <button class="btn btn-2" id="right">Right</button>
+                            <button class="btn btn-2" id="rotate">Rotate</button>
+                        </div>
+                    </div>
                 </div>
                 <br>
                 <div class="highScores">

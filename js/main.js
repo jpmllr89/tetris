@@ -5,6 +5,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const nextBlockGrid = document.querySelector(".nextBlockGrid");
   const scoreDisplay = document.querySelector("#score");
   const startBtn = document.querySelector("#start");
+  const leftBtn = document.querySelector("#left");
+  const rightBtn = document.querySelector("#right");
+  const rotateBtn = document.querySelector("#rotate");
+  const downBtn = document.querySelector("#down");
   const playerNameInput = document.querySelector("#playerName");
   const gameStatusContainer = document.querySelector("#gameStatusContainer");
   const highScore = document.querySelector("#highScore");
@@ -175,6 +179,10 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("keydown", (e) => {
     if (gameStatus === "playing") {
       controlpad(e);
+      rightBtn.addEventListener("click", moveRight);
+      leftBtn.addEventListener("click", moveLeft);
+      rotateBtn.addEventListener("click", rotate);
+      downBtn.addEventListener("click", moveDown);
     }
   });
 
@@ -383,10 +391,12 @@ document.addEventListener("DOMContentLoaded", () => {
   // start and pause button
   startBtn.addEventListener("click", () => {
     playerName = playerNameInput.value.trim();
-
     if (playerName === "" && gameStatus === "pre game") {
       alert("Please enter your name");
       console.log("status", gameStatus);
+      return;
+    } else if (playerName !== "" && gameStatus === "paused") {
+      alert("Please resume the game");
       return;
     }
     playerNameInput.value = "";
@@ -403,10 +413,6 @@ document.addEventListener("DOMContentLoaded", () => {
       case "paused":
         startGame();
         break;
-    }
-
-    if (gameStatus !== "pre game") {
-      toggleModal(); // Add this line to hide the modal
     }
   });
 
