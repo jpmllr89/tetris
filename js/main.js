@@ -315,8 +315,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (isgameOver) {
       return;
     }
-    draw();
-    displayShape();
+    // draw();
+    // displayShape();
     timerId = setInterval(moveDown, 1000);
     gameStatus = "playing";
   }
