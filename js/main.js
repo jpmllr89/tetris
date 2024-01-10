@@ -16,7 +16,14 @@ document.addEventListener("DOMContentLoaded", () => {
   let isgameOver = false;
   let gameStatus = "pre game";
   let gamesPlayed = 0;
+  let visible = "is-visible";
+  const gameOverSound = new Howl({ src: ["assets/sounds/game_over.mp3"] });
+  const backgroundSound = new Howl({
+    src: ["assets/sounds/background_music.mp3"],
+    loop: true,
+  });
 
+  backgroundSound.play();
   // Making Grid
   for (let i = 0; i < tetrisRow; i++) {
     const tetrisBlock = document.createElement("div");
@@ -133,7 +140,11 @@ document.addEventListener("DOMContentLoaded", () => {
       moveDown();
     }
   }
-  document.addEventListener("keydown", controlpad);
+  document.addEventListener("keydown", (e) => {
+    if (gameStatus === "playing") {
+      controlpad(e);
+    }
+  });
 
   //move tetris block down grid
   // timerId = setInterval(moveDown, 1000);
@@ -338,6 +349,10 @@ document.addEventListener("DOMContentLoaded", () => {
         startGame();
         break;
     }
+
+    if (gameStatus !== "pre game") {
+      toggleModal(); // Add this line to hide the modal
+    }
   });
 
   //remove rows once they are filled
@@ -363,11 +378,17 @@ document.addEventListener("DOMContentLoaded", () => {
         scoreDisplay.innerHTML = `${score}`;
         row.forEach((index) => {
           tetrisSquares[index].classList.remove("taken");
-          tetrisSquares[index].classList.remove(currentColor);
+          tetrisSquares[index].style.backgroundColor = "";
+          tetrisSquares[index].style.border = "";
         });
         const squaresRemoved = tetrisSquares.splice(i, tetrisWidth);
         tetrisSquares = squaresRemoved.concat(tetrisSquares);
         tetrisSquares.forEach((cell) => grid.appendChild(cell));
+        for (let k = 0; k < tetrisWidth; k++) {
+          tetrisSquares[k].classList.remove("taken");
+          tetrisSquares[k].style.backgroundColor = "";
+          tetrisSquares[k].style.border = "";
+        }
       }
     }
   }
@@ -379,6 +400,7 @@ document.addEventListener("DOMContentLoaded", () => {
         tetrisSquares[currentPosition + index].classList.contains("taken")
       )
     ) {
+      gameOverSound.play();
       isgameOver = true;
       scoreDisplay.innerHTML = "end";
       clearInterval(timerId);
@@ -416,11 +438,17 @@ document.addEventListener("DOMContentLoaded", () => {
               scoreDisplay.innerHTML = `${score}`;
               gameStatus = "pre game";
               timerId = null;
+              toggleModal();
             }
           }, 1);
         }
       }, 1);
     }
+  }
+
+  function toggleModal() {
+    const modal = document.querySelector(".modal");
+    modal.classList.toggle("is-visible");
   }
 
   function displayHighScore() {
