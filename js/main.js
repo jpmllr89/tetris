@@ -462,7 +462,7 @@ document.addEventListener("DOMContentLoaded", () => {
     highScore.innerHTML = "";
     highScores.forEach((score, index) => {
       const scoreElement = document.createElement("li");
-      scoreElement.innerHTML = `${index + 1}. ${score.name} - ${score.score}`;
+      scoreElement.innerHTML = `${score.name} - ${score.score}`;
       highScore.appendChild(scoreElement);
     });
   }

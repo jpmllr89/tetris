@@ -2,6 +2,7 @@ body{
   background-image: url("../images/photo-1515825838458-f2a94b20105a.avif");
   background-size: cover;
   background-position: center;
+  font-family: 'VT323', monospace;
 }
 
 h1, h2, h3{
@@ -10,13 +11,24 @@ h1, h2, h3{
 
 }
 
+ul{
+  padding: 0;
+  list-style: none;
+}
+
 .main{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.container{
   display: flex;
   flex-direction: column;
   /* justify-content: center; */
   /* align-items: center; */
   height: auto;
-  max-width: 650px;
+  min-width: 600px;
   /* background-color: #1b1b1b; */
   border: 1px solid black;
   background-color: white;
@@ -164,6 +176,8 @@ h1, h2, h3{
   border: 1px solid black;
   border-radius: 5px;
   cursor: pointer;
+  font-family: 'VT323', monospace;
+  font-size: 16px;
 }
 
 .btn-1{
@@ -173,6 +187,7 @@ h1, h2, h3{
 }
 
 .inputBox{
+  margin-top: 10px;
   display:flex;
   gap: 20px;
 }

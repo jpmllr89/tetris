@@ -6,35 +6,39 @@
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js" integrity="sha512-xi/RZRIF/S0hJ+yJJYuZ5yk6/8pCiRlEXZzoguSMl+vk2i3m6UjUO/WcZ11blRL/O+rnj94JRGwt/CHbc9+6EA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="js/main.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <link rel='stylesheet' type='text/css' href='css/style.css'>
 </head>
 <body>
     <div class="main">
-        
-        <div class="title">
-            <h1>Tetris</h1>
-        </div>
-
-        <div class="start">
-            <div class="start-wrapper">
-                <h3>Score:<span id="score">0</span></h3>
-                <div class="inputBox">
-                    <button class="btn btn-1" id="start">Start/Pause</button>
-                    <input type = "text" id = "playerName" placeholder="Enter your name">
+        <div class="container">
+            <div class="title">
+                <h1>Tetris</h1>
+            </div>
+    
+            <div class="start">
+                <div class="start-wrapper">
+                    <h3>Score:<span id="score">0</span></h3>
+                    <div class="inputBox">
+                        <button class="btn btn-1" id="start">Start/Pause</button>
+                        <input type = "text" id = "playerName" placeholder="Enter your name">
+                    </div>
                 </div>
             </div>
-        </div>
-
-        <div class="game">
-            <div class="grids-panel">
-                <div class="grid"></div>
-                <div class="nextBlockGrid"></div>
+    
+            <div class="game">
+                <div class="grids-panel">
+                    <div class="grid"></div>
+                    <div class="nextBlockGrid"></div>
+                </div>
+                <br>
+                <div class="highScores">
+                    <h2>High Scores</h2>
+                    <ul id="highScore"></ul>
+                </div>  
             </div>
-            <br>
-            <div class="highScores">
-                <h2>High Scores</h2>
-                <ul id="highScore"></ul>
-            </div>  
         </div>
     </div>
     <div id="gameStatusContainer" class="modal">
