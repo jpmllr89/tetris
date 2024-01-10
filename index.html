@@ -4,6 +4,7 @@
     <title>Tetris</title>
     <meta charset='utf-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js" integrity="sha512-xi/RZRIF/S0hJ+yJJYuZ5yk6/8pCiRlEXZzoguSMl+vk2i3m6UjUO/WcZ11blRL/O+rnj94JRGwt/CHbc9+6EA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="js/main.js"></script>
     <link rel='stylesheet' type='text/css' href='css/style.css'>
 </head>
@@ -18,34 +19,28 @@
             <div class="start-wrapper">
                 <h3>Score:<span id="score">0</span></h3>
                 <div class="inputBox">
-                    <button id="start">Start/Pause</button>
+                    <button class="btn btn-1" id="start">Start/Pause</button>
                     <input type = "text" id = "playerName" placeholder="Enter your name">
                 </div>
             </div>
         </div>
 
         <div class="game">
-            <div class="grid">
+            <div class="grids-panel">
+                <div class="grid"></div>
+                <div class="nextBlockGrid"></div>
             </div>
             <br>
-            <div class="right-panel">
-                <div id="gameStatusContainer">
-                    <h2>Play again?</h2>
-                    <p>Enter name again and press Start</p>
-                    <p>Or</p>
-                    <p>Press Down if you'd like to keep your name.</p>
-                </div>
-                <div class="nextBlockGrid">
-                </div>
-                
-            </div>
-            
+            <div class="highScores">
+                <h2>High Scores</h2>
+                <ul id="highScore"></ul>
+            </div>  
         </div>
-        <div class="highScores">
-            <h2>High Scores</h2>
-            <ul id="highScore"></ul>
-        </div>
-
+    </div>
+    <div id="gameStatusContainer" class="modal">
+        <h2>Play again?</h2>
+        <p>Enter name again and press Start</p>
+        <button onClick="toggleModal()" class="btn btn-1">OK</button>
     </div>
 </body>
 </html>
