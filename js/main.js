@@ -8,49 +8,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const playerNameInput = document.querySelector("#playerName");
   const gameStatusContainer = document.querySelector("#gameStatusContainer");
   const highScore = document.querySelector("#highScore");
-  let playerName = "";
-  let highScores = [];
-  let nextRandom = 0;
-  let score = 0;
-  let timerId;
-  let isgameOver = false;
-  let gameStatus = "pre game";
-  let gamesPlayed = 0;
-  let visible = "is-visible";
-  const gameOverSound = new Howl({ src: ["assets/sounds/game_over.mp3"] });
-  const backgroundSound = new Howl({
-    src: ["assets/sounds/background_music.mp3"],
-    loop: true,
-  });
 
-  backgroundSound.play();
-  // Making Grid
-  for (let i = 0; i < tetrisRow; i++) {
-    const tetrisBlock = document.createElement("div");
-    grid.appendChild(tetrisBlock);
-  }
-
-  // Here we will make the taken blocks
-  for (let i = 0; i < 10; i++) {
-    const tetrisBlock = document.createElement("div");
-    tetrisBlock.classList.add("taken");
-    grid.appendChild(tetrisBlock);
-  }
-
-  // Here we will make the next block grid
-  for (let i = 0; i < 16; i++) {
-    const tetrisBlock = document.createElement("div");
-    nextBlockGrid.appendChild(tetrisBlock);
-  }
-
-  let tetrisSquares = Array.from(document.querySelectorAll(".grid div"));
-  console.log(tetrisSquares);
-
-  // const newPosition = () =>{
-  //   return Math.floor(Math.random() * (tetrisWidth - blockWidth));
-  // }
-
-  // Here we will make the tetris blocks
+  // Here are all the tetris block configurations with the colors
   const lTetrisBlock = [
     [1, tetrisWidth + 1, tetrisWidth * 2 + 1, 2],
     [tetrisWidth, tetrisWidth + 1, tetrisWidth + 2, tetrisWidth * 2 + 2],
@@ -58,11 +17,30 @@ document.addEventListener("DOMContentLoaded", () => {
     [tetrisWidth, tetrisWidth * 2, tetrisWidth * 2 + 1, tetrisWidth * 2 + 2],
   ];
 
+  const lLeftTetrisBlock = [
+    [0, tetrisWidth, tetrisWidth * 2, tetrisWidth * 2 + 1],
+    [tetrisWidth, tetrisWidth + 1, tetrisWidth + 2, tetrisWidth * 2],
+    [1, tetrisWidth + 1, tetrisWidth * 2 + 1, tetrisWidth * 2 + 2],
+    [
+      tetrisWidth + 2,
+      tetrisWidth * 2,
+      tetrisWidth * 2 + 1,
+      tetrisWidth * 2 + 2,
+    ],
+  ];
+
   const zTetrisBlock = [
     [0, tetrisWidth, tetrisWidth + 1, tetrisWidth * 2 + 1],
     [tetrisWidth + 1, tetrisWidth + 2, tetrisWidth * 2, tetrisWidth * 2 + 1],
     [0, tetrisWidth, tetrisWidth + 1, tetrisWidth * 2 + 1],
     [tetrisWidth + 1, tetrisWidth + 2, tetrisWidth * 2, tetrisWidth * 2 + 1],
+  ];
+
+  const zLeftTetrisBlock = [
+    [1, tetrisWidth, tetrisWidth + 1, tetrisWidth * 2],
+    [tetrisWidth, tetrisWidth + 1, tetrisWidth * 2 + 1, tetrisWidth * 2 + 2],
+    [1, tetrisWidth, tetrisWidth + 1, tetrisWidth * 2],
+    [tetrisWidth, tetrisWidth + 1, tetrisWidth * 2 + 1, tetrisWidth * 2 + 2],
   ];
 
   const tTetrisBlock = [
@@ -92,6 +70,8 @@ document.addEventListener("DOMContentLoaded", () => {
     tTetrisBlock,
     oTetrisBlock,
     iTetrisBlock,
+    zLeftTetrisBlock,
+    lLeftTetrisBlock,
   ];
 
   const tetrisColors = [
@@ -105,14 +85,64 @@ document.addEventListener("DOMContentLoaded", () => {
     "#FF4B38",
   ];
 
-  console.log(tetrisColors[0]);
-  let currentPosition = Math.floor(Math.random() * tetrisWidth);
-  let currentRotation = Math.floor(Math.random() * 4);
-  let random = Math.floor(Math.random() * tetrisBlocks.length);
-  let currentColor = tetrisColors[Math.floor(Math.random() * 8)];
-  current = tetrisBlocks[random][currentRotation];
+  let playerName = "";
+  let highScores = [];
+  let nextRandom = 0;
+  let score = 0;
+  let timerId;
+  let isgameOver = false;
+  let gameStatus = "pre game";
+  let gamesPlayed = 0;
+  let visible = "is-visible";
+  let currentPosition;
+  let currentRotation;
+  let random;
+  let currentColor;
+
+  // Background music
+  const gameOverSound = new Howl({ src: ["assets/sounds/game_over.mp3"] });
+  const backgroundSound = new Howl({
+    src: ["assets/sounds/background_music.mp3"],
+    loop: true,
+  });
+  backgroundSound.play();
+
+  // Making Grid
+  for (let i = 0; i < tetrisRow; i++) {
+    const tetrisBlock = document.createElement("div");
+    grid.appendChild(tetrisBlock);
+  }
+
+  // Here we will make the taken blocks line so the blocks won't fall off the grid
+  for (let i = 0; i < 10; i++) {
+    const tetrisBlock = document.createElement("div");
+    tetrisBlock.classList.add("taken");
+    grid.appendChild(tetrisBlock);
+  }
+
+  // Here we will make the next block grid to show the next tetris block
+  for (let i = 0; i < 16; i++) {
+    const tetrisBlock = document.createElement("div");
+    nextBlockGrid.appendChild(tetrisBlock);
+  }
+
+  let tetrisSquares = Array.from(document.querySelectorAll(".grid div"));
+  console.log(tetrisSquares);
+
+  // Here we will make the tetris blocks
+
+  function setBlock() {
+    currentPosition = Math.floor(Math.random() * tetrisWidth);
+    currentRotation = Math.floor(Math.random() * 4);
+    random = Math.floor(Math.random() * tetrisBlocks.length);
+    currentColor = tetrisColors[Math.floor(Math.random() * 8)];
+    current = tetrisBlocks[random][currentRotation];
+  }
+
+  setBlock();
 
   //drawing tetris blocks
+
   function draw() {
     current.forEach((index) => {
       tetrisSquares[currentPosition + index].style.backgroundColor =
@@ -128,7 +158,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // move tetris blocks
+  // Moving tetris blocks
   function controlpad(e) {
     if (e.keyCode === 37) {
       moveLeft();
@@ -140,14 +170,13 @@ document.addEventListener("DOMContentLoaded", () => {
       moveDown();
     }
   }
+
+  // if the game is paused, the control pad won't work
   document.addEventListener("keydown", (e) => {
     if (gameStatus === "playing") {
       controlpad(e);
     }
   });
-
-  //move tetris block down grid
-  // timerId = setInterval(moveDown, 1000);
 
   function moveDown() {
     if (isgameOver) {
@@ -158,40 +187,7 @@ document.addEventListener("DOMContentLoaded", () => {
     draw();
     freeze();
   }
-  // moveDown();
 
-  // to keep the new block within the grid, you'll need to get the width of the present block
-  function getBlockWidth(block) {
-    let xCoordinates = block.map((index) => index % tetrisWidth);
-    return Math.max(...xCoordinates) - Math.min(...xCoordinates) + 1;
-  }
-
-  // add freeze function to keep the block there
-  function freeze() {
-    if (
-      current.some((index) =>
-        tetrisSquares[currentPosition + index + tetrisWidth].classList.contains(
-          "taken"
-        )
-      )
-    ) {
-      current.forEach((index) =>
-        tetrisSquares[currentPosition + index].classList.add("taken")
-      );
-      //start a new tetris block falling
-      random = nextRandom;
-      nextRandom = Math.floor(Math.random() * tetrisBlocks.length);
-      current = tetrisBlocks[random][currentRotation];
-      let blockWidth = getBlockWidth(current);
-      currentPosition = Math.floor(Math.random() * (tetrisWidth - blockWidth));
-      draw();
-      displayShape();
-      removeRow();
-      gameOver();
-    }
-  }
-
-  // move the tetris block left, unless is at the edge or hits a block
   function moveLeft() {
     unDraw();
 
@@ -270,6 +266,37 @@ document.addEventListener("DOMContentLoaded", () => {
     draw();
   }
 
+  // This gets the width of the block which is necessary later to keep the block at the bottom and continue the game
+  function getBlockWidth(block) {
+    let xCoordinates = block.map((index) => index % tetrisWidth);
+    return Math.max(...xCoordinates) - Math.min(...xCoordinates) + 1;
+  }
+
+  // add freeze function to keep the block there
+  function freeze() {
+    if (
+      current.some((index) =>
+        tetrisSquares[currentPosition + index + tetrisWidth].classList.contains(
+          "taken"
+        )
+      )
+    ) {
+      current.forEach((index) =>
+        tetrisSquares[currentPosition + index].classList.add("taken")
+      );
+      //start a new tetris block falling
+      random = nextRandom;
+      nextRandom = Math.floor(Math.random() * tetrisBlocks.length);
+      current = tetrisBlocks[random][currentRotation];
+      let blockWidth = getBlockWidth(current);
+      currentPosition = Math.floor(Math.random() * (tetrisWidth - blockWidth));
+      draw();
+      displayShape();
+      removeRow();
+      gameOver();
+    }
+  }
+
   // show up-next block in mini-grid display
   const displayTetrisSquares = document.querySelectorAll(".nextBlockGrid div");
   const displayWidth = 4;
@@ -277,26 +304,45 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // tetris blocks without rotations
   const upNextTetrisBlocks = [
-    [1, displayWidth + 1, displayWidth * 2 + 1, 2], // lblock
+    // lblock
+    [1, displayWidth + 1, displayWidth * 2 + 1, 2],
+    // zblock
     [
       displayWidth + 1,
       displayWidth * 2 + 1,
       displayWidth * 2 + 2,
       displayWidth * 3 + 2,
-    ], // zblock
+    ],
+    // tblock
     [
       displayWidth * 2 + 1,
       displayWidth + 1,
       displayWidth * 3 + 1,
       displayWidth * 2 + 2,
-    ], // tblock
+    ],
+    // oblock
     [
       displayWidth + 1,
       displayWidth + 2,
       displayWidth * 2 + 1,
       displayWidth * 2 + 2,
-    ], // oblock
-    [1, displayWidth + 1, displayWidth * 2 + 1, displayWidth * 3 + 1], // iblock
+    ],
+    // iblock
+    [1, displayWidth + 1, displayWidth * 2 + 1, displayWidth * 3 + 1],
+    // left zblock
+    [
+      displayWidth,
+      displayWidth + 1,
+      displayWidth * 2 + 1,
+      displayWidth * 2 + 2,
+    ],
+    // left lblock
+    [
+      displayWidth * 2,
+      displayWidth * 2 + 1,
+      displayWidth * 2 + 2,
+      displayWidth + 2,
+    ],
   ];
 
   // display the shape in the mini-grid display
@@ -311,12 +357,20 @@ document.addEventListener("DOMContentLoaded", () => {
       displayTetrisSquares[index].style.backgroundColor = currentColor;
     });
   }
+
+  // This will be needed later for the game over function
+  function unDisplayShape() {
+    displayTetrisSquares.forEach((block) => {
+      block.style.backgroundColor = "";
+    });
+  }
+
+  // start game interval
   function startGame() {
     if (isgameOver) {
       return;
     }
-    // draw();
-    // displayShape();
+
     timerId = setInterval(moveDown, 1000);
     gameStatus = "playing";
   }
@@ -325,7 +379,8 @@ document.addEventListener("DOMContentLoaded", () => {
     clearInterval(timerId);
     gameStatus = "paused";
   }
-  // start button
+
+  // start and pause button
   startBtn.addEventListener("click", () => {
     playerName = playerNameInput.value.trim();
 
@@ -357,7 +412,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   //remove rows once they are filled
   function removeRow() {
+    // go through each row
     for (let i = 0; i < 199; i += tetrisWidth) {
+      // map and select the row
       const row = [
         i,
         i + 1,
@@ -370,20 +427,27 @@ document.addEventListener("DOMContentLoaded", () => {
         i + 8,
         i + 9,
       ];
-
+      // if row is filled
       if (
         row.every((index) => tetrisSquares[index].classList.contains("taken"))
       ) {
+        // add 10 to the score
         score += parseInt(10);
         scoreDisplay.innerHTML = `${score}`;
+
+        // remove the color and border of the row
         row.forEach((index) => {
           tetrisSquares[index].classList.remove("taken");
           tetrisSquares[index].style.backgroundColor = "";
           tetrisSquares[index].style.border = "";
         });
+
+        // remove the empty row
         const squaresRemoved = tetrisSquares.splice(i, tetrisWidth);
         tetrisSquares = squaresRemoved.concat(tetrisSquares);
         tetrisSquares.forEach((cell) => grid.appendChild(cell));
+
+        // take the top row off the grid
         for (let k = 0; k < tetrisWidth; k++) {
           tetrisSquares[k].classList.remove("taken");
           tetrisSquares[k].style.backgroundColor = "";
@@ -391,6 +455,16 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
     }
+  }
+
+  // Add high score to container after each game
+  function displayHighScore() {
+    highScore.innerHTML = "";
+    highScores.forEach((score, index) => {
+      const scoreElement = document.createElement("li");
+      scoreElement.innerHTML = `${index + 1}. ${score.name} - ${score.score}`;
+      highScore.appendChild(scoreElement);
+    });
   }
 
   //game over function
@@ -401,6 +475,7 @@ document.addEventListener("DOMContentLoaded", () => {
       )
     ) {
       gameOverSound.play();
+      unDisplayShape();
       isgameOver = true;
       scoreDisplay.innerHTML = "end";
       clearInterval(timerId);
@@ -444,19 +519,5 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }, 1);
     }
-  }
-
-  function toggleModal() {
-    const modal = document.querySelector(".modal");
-    modal.classList.toggle("is-visible");
-  }
-
-  function displayHighScore() {
-    highScore.innerHTML = "";
-    highScores.forEach((score, index) => {
-      const scoreElement = document.createElement("li");
-      scoreElement.innerHTML = `${index + 1}. ${score.name} - ${score.score}`;
-      highScore.appendChild(scoreElement);
-    });
   }
 });
