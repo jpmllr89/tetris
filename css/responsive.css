@@ -1,0 +1,145 @@
+/* Small devices (portrait phones, less than 576px) */
+@media (max-width: 575.98px) {
+  .highScores{
+    display: none;
+  }
+
+  .nextBlockGrid.phone-viz{
+    display: none;
+  }
+
+  .container{
+    min-width: 0px;
+    padding-bottom: 60px;
+  }
+
+  .main{
+    width: 100%;
+    height: 100vh;
+  }
+
+  .grids-panel{
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .controls{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .btn{
+    height: 25px
+  }
+  .game{
+    margin: 0;
+  }
+  .inputBox input{
+    height: fit-content;
+  }
+
+  .title{
+    margin: 0;
+  }
+}
+
+@media (min-width: 576px) {
+  .highScores{
+    display: none;
+  }
+
+  .nextBlockGrid.phone-viz{
+    display: none;
+  }
+
+  .container{
+    min-width: 500px;
+    padding-bottom: 60px;
+  }
+
+  .grids-panel{
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .controls{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .btn{
+    height: 25px
+  }
+  .inputBox input{
+    height: fit-content;
+  }
+
+  .title{
+    margin: 0;
+  }
+}
+
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+  .highScores{
+    display: block;
+  }
+
+  .nextBlockGrid.phone-viz{
+    display: flex;
+  }
+
+  .grids-panel{
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .controls{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media (min-width: 768px) and (orientation: landscape) {
+  /* Add your styles for medium landscape devices here */
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+  .controls{
+    display: none;
+  }
+}
+
+/* Large devices (landscape desktops, 992px and up) */
+@media (min-width: 992px) and (orientation: landscape) {
+  /* Add your styles for large landscape devices here */
+}
+
+/* Extra-large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+  /* Add your styles for extra-large devices here */
+}
+
+/* Extra-large devices (large landscape desktops, 1200px and up) */
+@media (min-width: 1200px) and (orientation: landscape) {
+  /* Add your styles for extra-large landscape devices here */
+}
