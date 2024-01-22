@@ -14,17 +14,17 @@ document.addEventListener("DOMContentLoaded", () => {
   const highScore = document.querySelector("#highScore");
 
   // Here are all the tetris block configurations with the colors
-  const lTetrisBlock = [
+  const lLeftTetrisBlock = [
     [1, tetrisWidth + 1, tetrisWidth * 2 + 1, 2],
     [tetrisWidth, tetrisWidth + 1, tetrisWidth + 2, tetrisWidth * 2 + 2],
     [1, tetrisWidth + 1, tetrisWidth * 2 + 1, tetrisWidth * 2],
     [tetrisWidth, tetrisWidth * 2, tetrisWidth * 2 + 1, tetrisWidth * 2 + 2],
   ];
 
-  const lLeftTetrisBlock = [
+  const lRightTetrisBlock = [
     [0, tetrisWidth, tetrisWidth * 2, tetrisWidth * 2 + 1],
-    [tetrisWidth, tetrisWidth + 1, tetrisWidth + 2, tetrisWidth * 2],
-    [1, tetrisWidth + 1, tetrisWidth * 2 + 1, tetrisWidth * 2 + 2],
+    [0, 1, 2, tetrisWidth],
+    [0, 1, tetrisWidth + 1, tetrisWidth * 2 + 1],
     [
       tetrisWidth + 2,
       tetrisWidth * 2,
@@ -69,13 +69,13 @@ document.addEventListener("DOMContentLoaded", () => {
   ];
 
   const tetrisBlocks = [
-    lTetrisBlock,
+    lLeftTetrisBlock,
     zTetrisBlock,
     tTetrisBlock,
     oTetrisBlock,
     iTetrisBlock,
     zLeftTetrisBlock,
-    lLeftTetrisBlock,
+    lRightTetrisBlock,
   ];
 
   const tetrisColors = [
@@ -102,6 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let currentRotation;
   let random;
   let currentColor;
+  let displayColor = tetrisColors[Math.floor(Math.random() * 8)];
 
   // Background music
   const gameOverSound = new Howl({ src: ["assets/sounds/game_over.mp3"] });
@@ -139,12 +140,17 @@ document.addEventListener("DOMContentLoaded", () => {
     currentPosition = Math.floor(Math.random() * tetrisWidth);
     currentRotation = Math.floor(Math.random() * 4);
     random = Math.floor(Math.random() * tetrisBlocks.length);
-    currentColor = tetrisColors[Math.floor(Math.random() * 8)];
+    if (currentColor === undefined) {
+      currentColor = tetrisColors[Math.floor(Math.random() * 8)];
+    }
+    // else if (currentColor !== displayColor) {
+    //   currentColor = displayColor;
+    // }
     current = tetrisBlocks[random][currentRotation];
+    console.log("color:", currentColor);
   }
 
   setBlock();
-
   //drawing tetris blocks
 
   function draw() {
@@ -183,6 +189,8 @@ document.addEventListener("DOMContentLoaded", () => {
       leftBtn.addEventListener("click", moveLeft);
       rotateBtn.addEventListener("click", rotate);
       downBtn.addEventListener("click", moveDown);
+    } else if (gameStatus === "paused") {
+      return;
     }
   });
 
@@ -190,6 +198,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (isgameOver) {
       return;
     }
+    // currentColor = displayColor;
     unDraw();
     currentPosition += tetrisWidth;
     draw();
@@ -295,11 +304,13 @@ document.addEventListener("DOMContentLoaded", () => {
       //start a new tetris block falling
       random = nextRandom;
       nextRandom = Math.floor(Math.random() * tetrisBlocks.length);
+      currentColor = displayColor;
       current = tetrisBlocks[random][currentRotation];
       let blockWidth = getBlockWidth(current);
       currentPosition = Math.floor(Math.random() * (tetrisWidth - blockWidth));
       draw();
       displayShape();
+      // currentColor = displayColor;
       removeRow();
       gameOver();
     }
@@ -357,12 +368,12 @@ document.addEventListener("DOMContentLoaded", () => {
   function displayShape() {
     // remove any trace of a tetris block from the entire grid
     console.log("color Selected");
-    currentColor = tetrisColors[Math.floor(Math.random() * 8)];
+    displayColor = tetrisColors[Math.floor(Math.random() * 8)];
     displayTetrisSquares.forEach((block) => {
       block.style.backgroundColor = "";
     });
     upNextTetrisBlocks[nextRandom].forEach((index) => {
-      displayTetrisSquares[index].style.backgroundColor = currentColor;
+      displayTetrisSquares[index].style.backgroundColor = displayColor;
     });
   }
 
@@ -525,5 +536,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }, 1);
     }
+    // currentColor = displayColor;
   }
 });
